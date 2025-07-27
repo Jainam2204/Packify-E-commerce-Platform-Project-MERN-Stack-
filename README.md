@@ -86,5 +86,5 @@ July 27, 2025
 
 ## Author
 
-Built by [Jainam Vora] 
+Built by Jainam Vora
 
