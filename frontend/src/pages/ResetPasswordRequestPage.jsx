@@ -11,7 +11,6 @@ const ResetPasswordRequestPage = () => {
   const [message, setMessage] = useState('');
 
   const [requestNewPassword, { isLoading }] = useNewPasswordRequestMutation();
-  // console.log(useNewPasswordRequestMutation());
   const handleSubmit = async e => {
     e.preventDefault();
     try {

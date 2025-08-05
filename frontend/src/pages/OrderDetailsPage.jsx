@@ -34,10 +34,8 @@ const OrderDetailsPage = () => {
 
   const paymentHandler = async e => {
     try {
-      // Make the API call to Razorpay
-
       const razorpayData = {
-        amount: order.totalPrice * 100, // Razorpay expects the amount in paisa, so multiply by 100
+        amount: order.totalPrice * 100,
         currency: 'INR',
         receipt: `receipt#${orderId}`
       };
@@ -49,14 +47,16 @@ const OrderDetailsPage = () => {
       const { id: razorpayOrderId } = data;
 
       const options = {
-        key: razorpayApiKey.razorpayKeyId, // Enter the Key ID generated from the Dashboard
-        amount: razorpayData.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        key: razorpayApiKey.razorpayKeyId,
+        amount: razorpayData.amount,
         currency: razorpayData.currency,
-        name: 'MERN Shop', //your business name
+        name: 'Packify', 
         description: 'Test Transaction',
         image: 'https://example.com/your_logo',
-        order_id: razorpayOrderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        order_id: razorpayOrderId, 
         handler: async response => {
+          console.log('Razorpay response:', response);
+
           try {
             const { data } = await axios.post(
               `/api/v1/payment/razorpay/order/validate`,
@@ -66,17 +66,16 @@ const OrderDetailsPage = () => {
             await payOrder({ orderId, details });
             toast.success(data.message);
           } catch (error) {
+            console.error('Validation error:', error);
             toast.error(error?.data?.message || error.error);
           }
         },
         prefill: {
-          //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
-          name: order?.user?.name, //your customer's name
+          name: order?.user?.name,
           email: order?.user?.email
-          // contact: '9000090000' //Provide the customer's phone number for better conversion rates
         },
         notes: {
-          address: 'MERN Shop Office'
+          address: 'Packify Office'
         },
         theme: {
           color: '#FFC107'
@@ -84,17 +83,18 @@ const OrderDetailsPage = () => {
       };
       var rzp1 = new window.Razorpay(options);
       rzp1.open();
-      // e.preventDefault();
 
-      // rzp1.on('payment.failed', response => {
-      //   alert(response.error.code);
-      //   alert(response.error.description);
-      //   alert(response.error.source);
-      //   alert(response.error.step);
-      //   alert(response.error.reason);
-      //   alert(response.error.metadata.order_id);
-      //   alert(response.error.metadata.payment_id);
-      // });
+      rzp1.on('payment.failed', function (response) {
+      console.error('Payment Failed:', {
+      code: response.error.code,
+      description: response.error.description,
+      reason: response.error.reason,
+      step: response.error.step,
+      order_id: response.error.metadata.order_id,
+      payment_id: response.error.metadata.payment_id
+  });
+});
+
     } catch (error) {
       toast.error(error?.data?.message || error.error);
     }

@@ -62,27 +62,27 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    // Price of the product
+    
     price: {
       type: Number,
       required: true,
       default: 0
     },
-    // Quantity available in stock
+    
     countInStock: {
       type: Number,
       required: true,
       default: 0
     },
-    // Array of reviews associated with the product
+    
     reviews: [reviewSchema],
-    // Overall rating of the product
+    
     rating: {
       type: Number,
       required: true,
       default: 0
     },
-    // Number of reviews for the product
+    
     numReviews: {
       type: Number,
       required: true,
@@ -92,8 +92,6 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Create the Product model
 const Product = mongoose.model('Product', productSchema);
 
-// Export the Product model
 export default Product;

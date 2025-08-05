@@ -61,7 +61,7 @@ const ShippingPage = () => {
           <Form.Control
             value={postalCode}
             type='text'
-            placeholder='Enter city'
+            placeholder='Enter postal code'
             onChange={e => setPostalCode(e.target.value)}
           />
         </Form.Group>
@@ -70,7 +70,7 @@ const ShippingPage = () => {
           <Form.Control
             value={country}
             type='text'
-            placeholder='Enter city'
+            placeholder='Enter country'
             onChange={e => setCountry(e.target.value)}
           />
         </Form.Group>

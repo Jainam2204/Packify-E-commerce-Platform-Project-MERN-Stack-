@@ -16,18 +16,20 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 const port = process.env.PORT || 5000;
 
-// Connect to MongoDB
 connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 app.use(compression());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const __dirname = path.resolve(); // Set {__dirname} to current working directory
+const __dirname = path.resolve(); 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/v1/products', productRoutes);
@@ -35,11 +37,10 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/upload', uploadRoutes);
 app.use('/api/v1/payment', paymentRoutes);
-//-------------------------------------
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/frontend/build')));
 
-  //any app route that is not api will redirected to index.html
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
   });
@@ -49,9 +50,13 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-//-------------------------------------
 app.use(notFound);
 app.use(errorHandler);
+
+app.use((err, req, res, next) => {
+  console.error('Server Error:', err.message);
+  res.status(500).json({ message: err.message || 'Server Error' });
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);

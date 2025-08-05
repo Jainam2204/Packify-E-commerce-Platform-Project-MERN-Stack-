@@ -131,7 +131,6 @@ const updateProduct = async (req, res, next) => {
 
     const updatedProduct = await product.save();
 
-    // Delete the previous image if it exists and if it's different from the new image
     if (previousImage && previousImage !== updatedProduct.image) {
       deleteFile(previousImage);
     }
@@ -156,7 +155,7 @@ const deleteProduct = async (req, res, next) => {
       throw new Error('Product not found!');
     }
     await Product.deleteOne({ _id: product._id });
-    deleteFile(product.image); // Remove upload file
+    deleteFile(product.image); 
 
     res.status(200).json({ message: 'Product deleted' });
   } catch (error) {

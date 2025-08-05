@@ -269,15 +269,17 @@ const resetPasswordRequest = async (req, res, next) => {
       throw new Error('User not found!');
     }
 
+    console.log('Sending password reset email to:', user.email);
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: '15m'
     });
-    const passwordResetLink = `https://mern-shop-abxs.onrender.com/reset-password/${user._id}/${token}`;
+    const passwordResetLink = `http://localhost:3000/reset-password/${user._id}/${token}`;
     console.log(passwordResetLink);
     await transporter.sendMail({
-      from: `"MERN Shop" ${process.env.EMAIL_FROM}`, // sender address
-      to: user.email, // list of receivers
-      subject: 'Password Reset', // Subject line
+      from: `"Packify" ${process.env.EMAIL_FROM}`,
+      to: user.email,
+      subject: 'Password Reset',
       html: `<p>Hi ${user.name},</p>
 
             <p>We received a password reset request for your account. Click the link below to set a new password:</p>
@@ -287,15 +289,16 @@ const resetPasswordRequest = async (req, res, next) => {
             <p>If you didn't request this, you can ignore this email.</p>
 
             <p>Thanks,<br>
-            MERN Shop Team</p>` // html body
+            Packify Team</p>`
     });
 
     res
       .status(200)
       .json({ message: 'Password reset email sent, please check your email.' });
   } catch (error) {
-    next(error);
-  }
+  console.error('Email sending failed:', error);
+  res.status(500).json({ message: 'Failed to send reset email.' });
+}
 };
 
 // @desc     Reset password

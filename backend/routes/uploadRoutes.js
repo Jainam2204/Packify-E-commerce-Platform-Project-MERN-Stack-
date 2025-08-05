@@ -19,10 +19,8 @@ const fileFilter = (req, file, cb) => {
     file.mimetype === 'image/jpg' ||
     file.mimetype === 'image/jpeg'
   ) {
-    // To accept the file pass `true`, like so:
     cb(null, true);
   } else {
-        // To reject this file pass `false`, like so:
     cb('Images only!');
   }
 };

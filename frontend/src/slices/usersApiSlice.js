@@ -1,4 +1,4 @@
-import { USERS_URL } from '../constants';
+import {BASE_URL, USERS_URL } from '../constants';
 import { apiSlice } from './apiSlice';
 
 export const usersApiSlice = apiSlice.injectEndpoints({
@@ -27,8 +27,9 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ['User']
     }),
     newPasswordRequest: builder.mutation({
+      
       query: data => ({
-        url: `${USERS_URL}/reset-password/request`,
+        url: `${BASE_URL}${USERS_URL}/reset-password/request`,
         method: 'POST',
         body: data
       }),
